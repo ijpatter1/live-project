@@ -3,13 +3,15 @@
 Welcome to my Live Project repository. This project was built using the Django framework. I was tasked with building an interactive web app for managing one's
 collections of things related to various hobbies, as well as API and Data Scraped content for those hobbies.
 
+INSERT GIF HERE
+
 There were 3 distinct portions of the app with individual stories covering each portion: a Database Collection Manager, Data Scraping with Beautiful Soup and a Restful API interface.
 
 The tool set for the project consisted of the following Python packages: beautifulsoup4 4.7.1; certifi 2018.11.29; chardet 3.0.4; Django 2.1.5; idna 2.8; numpy 1.16.2; pytz 2018.9; requests 2.21.0; selenium 3.141.0; soupsieve 1.7.2; urllib3 1.24.1.
 
 # Database collection manager
 
-INSERT GIF HERE
+INSERT SCREENSHOT HERE
 
 Specifically, my web app focused on tracking S&P 500 quarterly earnings report data. For context, the S&P 500 is an index of 500 large companies list on US stock exchanges.
 
@@ -58,7 +60,7 @@ class CompanyForm(ModelForm):
         }
 ```
 
-I wrote the views and templates necessary to handle requests and display the data from the database.
+I wrote the views and templates necessary to handle requests and display the data from the database. Users can add, edit and remove companies from the database. Multiple companies can be removed at once from the Index page. 
 
 ```python
 def index(request):
@@ -137,9 +139,10 @@ def company_details(request, ticker):
 
 # Data Scraping with Beautiful Soup
 
-INSERT GIF HERE
+INSERT SCREENSHOT HERE
 
-I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings. I wanted to allow the User to not only view the data for any given day, but also each day on any given week, and be able to navigate from one week to the next. This required me to understand how Yahoo Finance handles requests, and then write a function to autonomously generate the necessary parameters for a request. Then I was able to pass those parameters to a different function that made the page request and scrape the desired data from the page.
+I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings. I wanted to allow the User to not only view the data for any given day, but also each day on any given week, and be able to navigate from one week to the next. This required me to understand how Yahoo Finance handles requests, and then write a function to define the necessary parameters for a request. Then I was able to pass those parameters to a different function that made the page request and scrape the desired data from the page.
+
 Below is the view function for the Calendar page:
 
 ```python
@@ -247,9 +250,8 @@ def scrape_earnings(params):
         company_earnings = []
     return company_earnings
 ```
-
 # Restful API interface
 
-INSERT GIF HERE
+INSERT SCREENSHOT HERE
 
 I used the Yahoo finance API from rapidapi.com to request news articles relating to S&P 500 companies.
