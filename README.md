@@ -5,6 +5,8 @@ INSERT GIF HERE
 * [Introduction](#introduction)
 * [Database Collection Manager](#database-collection-manager)
 * [Data Scraping with Beautiful Soup](#data-scraping-with-beautiful-soup)
+* [Restful API interface](#restful-api-interface)
+* [Future Plans](#future-plans)
 
 ## Introduction
 
