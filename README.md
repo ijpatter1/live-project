@@ -139,7 +139,8 @@ def company_details(request, ticker):
 
 INSERT GIF HERE
 
-I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings.
+I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings. I wanted to allow the User to not only view the data for any given day, but also each day on any given week, and be able to navigate from one week to the next. This required me to understand how Yahoo Finance handles requests, and then write a function to autonomously generate the necessary parameters for a request. Then I was able to pass those parameters to a different function that made the page request and scrape the desired data from the page.
+Below is the view function for the Calendar page:
 
 ```python
 def calendar(request):
@@ -186,6 +187,65 @@ def calendar(request):
     context = {'market_time': date_obj, 'week_dates': week_dates, 'company_earnings': company_earnings}
     return render(request, 'EarningsApp/earningsapp_calendar.html', context)
 
+```
+Here is the function to define the request parameters based on any given day:
+```python
+def get_params(date_obj=timezone.now()):
+    date_iso = date_obj.isocalendar()
+    # an iso week starts on Monday, but Yahoo finance's week starts on Sunday
+    # so we use the isocalendar() method to determine which day of the week
+    # is being requested and we establish the params from there.
+    if date_iso[2] == 7:  # if the date_obj is a Sunday
+        week_start = date_obj.date()
+        week_end = week_start + timedelta(days=6)
+        day = date_obj.date()
+    else:
+        monday = datetime.date.fromisocalendar(date_iso[0], date_iso[1], 1)  # inverse of isocalendar() to get date obj
+        week_start = monday - timedelta(days=1)
+        week_end = datetime.date.fromisocalendar(date_iso[0], date_iso[1], 6)
+        day = date_obj.date()
+    params = {'from': f'{week_start}', 'to': f'{week_end}', 'day': f'{day}'}
+    # next, we create a list of the days of the selected week to pass to the template for the nav bar links
+    day_counter = week_start
+    prev_monday = week_start - timedelta(days=6)  # we use Monday because we don't want
+    next_monday = week_start + timedelta(days=8)  # to display results for Sunday (because the market is closed)
+    week_dates = [prev_monday, next_monday]
+    i = 1
+    while i < 6:
+        # we insert the days at the index corresponding to their iso values i.e. 1 = mon, 2 = tues, etc.
+        day_counter += timedelta(days=1)
+        week_dates.insert(i, day_counter)
+        i += 1
+    return params, week_dates
+```
+And this is the function that makes the page request and scrapes the data:
+```python
+def scrape_earnings(params):
+    response = requests.get("https://finance.yahoo.com/calendar/earnings", params=params)
+    soup = bs(response.content, "html.parser")  # parse web page for dissecting
+    try:  # if there is data to be found at the specified id, create a list of dicts for the template to display
+        earnings_table = soup.find(id="cal-res-table")  # identifier for earnings table data
+        earnings_tbody = earnings_table.find('')
+        earnings_rows = earnings_tbody('tr')
+        company_earnings = []
+        for row in earnings_rows:
+            string_list = []
+            for string in row.strings:
+                string_list.append(string)
+            if in_sp500(string_list[0]):
+                company_data = {"symbol": string_list[0],
+                                "company": string_list[1],
+                                "calltime": string_list[2],
+                                "estimate": string_list[3],
+                                "reported": string_list[4],
+                                "surprise": string_list[5]
+                                }
+                company_earnings.append(company_data)
+    except TypeError:  # if there isn't any data found, pass an empty list to the template
+        company_earnings = []
+    except AttributeError:
+        company_earnings = []
+    return company_earnings
 ```
 
 # Restful API interface
