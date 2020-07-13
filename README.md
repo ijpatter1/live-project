@@ -1,17 +1,15 @@
 # The Tech Academy Live Project
 
+INSERT GIF HERE
+
 Welcome to my Live Project repository. This project was built using the Django framework. I was tasked with building an interactive web app for managing one's
 collections of things related to various hobbies, as well as API and Data Scraped content for those hobbies.
-
-INSERT GIF HERE
 
 There were 3 distinct portions of the app with individual stories covering each portion: a Database Collection Manager, Data Scraping with Beautiful Soup and a Restful API interface.
 
 The tool set for the project consisted of the following Python packages: beautifulsoup4 4.7.1; certifi 2018.11.29; chardet 3.0.4; Django 2.1.5; idna 2.8; numpy 1.16.2; pytz 2018.9; requests 2.21.0; selenium 3.141.0; soupsieve 1.7.2; urllib3 1.24.1.
 
 # Database collection manager
-
-INSERT SCREENSHOT HERE
 
 Specifically, my web app focused on tracking S&P 500 quarterly earnings report data. For context, the S&P 500 is an index of 500 large companies list on US stock exchanges.
 
@@ -59,6 +57,8 @@ class CompanyForm(ModelForm):
             'estimated_eps': NumberInput(attrs={'placeholder': '0.00'})
         }
 ```
+
+INSERT SCREENSHOT HERE
 
 I wrote the views and templates necessary to handle requests and display the data from the database. Users can add, edit and remove companies from the database. Multiple companies can be removed at once from the Index page. 
 
@@ -120,6 +120,8 @@ def edit_company(request, ticker):
     context = {'form': form, 'ticker': ticker, 'company': company}
     return render(request, 'EarningsApp/earningsapp_edit.html', context)
 ```
+
+INSERT SCREENSHOT HERE
 
 This included a details page that featured widgets providing more in depth data.
 ```python
@@ -254,4 +256,66 @@ def scrape_earnings(params):
 
 INSERT SCREENSHOT HERE
 
-I used the Yahoo finance API from rapidapi.com to request news articles relating to S&P 500 companies.
+I used the Yahoo finance API from rapidapi.com to request news articles relating to S&P 500 companies. Below is the function I wrote to extract a list of articles from the json response:
+```python
+def get_news(category):
+    url = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/news/list"
+    querystring = {"category": category, "region": "US"}
+    headers = {
+        'x-rapidapi-host': RAPIDAPI_HOST,
+        'x-rapidapi-key': RAPIDAPI_KEY
+    }
+    response = requests.get(url, headers=headers, params=querystring)
+    try:
+        data = response.json()
+        articles = []
+        for item in data['items']['result']:
+            article = {
+                'title': item['title'],
+                'link': item['link'],
+                'date': datetime.datetime.fromtimestamp(item['published_at'])
+            }
+            articles.append(article)
+    except KeyError:
+        error_msg = "Couldn't connect to the API. Please try again."
+        context = {'error': error_msg}
+        return context
+    context = {'articles': articles}
+    return context
+```
+INSERT SCREENSHOT HERE
+I created a view for a dedicated news page that also allows the User to search for headlines by stock symbol:
+```python
+def news(request):
+    symbol = request.GET.get('symbol')
+    category = "generalnews"
+    if symbol:
+        if in_sp500(symbol):
+            category = symbol
+        else:
+            error_msg = "Please enter a valid S&P 500 stock symbol."
+            context = {'error': error_msg}
+            return render(request, 'EarningsApp/earningsapp_news.html', context)
+    context = get_news(category)
+    return render(request, 'EarningsApp/earningsapp_news.html', context)
+```
+
+INSERT SCREENSHOT HERE
+
+And I also used it in combination with the data scraping function on the homepage:
+```python
+def home(request):
+    date_obj = timezone.now()  # + timedelta(days=11) # for testing
+    params, week_dates = get_params(date_obj)
+    company_earnings = scrape_earnings(params)
+    context = {'market_time': date_obj, 'week_dates': week_dates, 'company_earnings': company_earnings}
+    category = "generalnews"
+    top_five = get_news(category)
+    top_five['articles'] = top_five['articles'][:5]
+    context.update(top_five)
+    return render(request, "EarningsApp/earningsapp_home.html", context)
+```
+
+# Future plans
+
+I created this web app to automate a process that I personally go through. I intend on turning this project into a fully functioning web app that will aggregate free stock market data to enable trading strategies that profit from the share price movements caused by the earnings season.
