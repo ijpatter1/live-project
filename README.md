@@ -1,6 +1,6 @@
 # The Tech Academy Live Project
 
-![](overview.gif)
+![](Images/overview.gif)
 
 * [Introduction](#introduction)
 * [Database Collection Manager](#database-collection-manager)
