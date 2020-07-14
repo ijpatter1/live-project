@@ -1,6 +1,6 @@
 # The Tech Academy Live Project
 
-![](Images/overview.gif)
+![Overview GIF](Images/overview.gif)
 
 * [Introduction](#introduction)
 * [Database Collection Manager](#database-collection-manager)
@@ -24,7 +24,7 @@ Specifically, my web app focused on tracking S&P 500 quarterly earnings report d
 
 I created a django model and model form for saving company data to the database and developed basic "CRUD" functionality. 
 
-![](form.png)
+![Form Page](Images/form.png)
 
 ```python
 class Company(models.Model):
@@ -69,7 +69,7 @@ class CompanyForm(ModelForm):
         }
 ```
 
-![](tracker.png)
+![Tracker Page](Images/tracker.png)
 
 I wrote the views and templates necessary to handle requests and display the data from the database. Users can add, edit and remove companies from the database. Multiple companies can be removed at once from the Index page. 
 
@@ -132,7 +132,7 @@ def edit_company(request, ticker):
     return render(request, 'EarningsApp/earningsapp_edit.html', context)
 ```
 
-![](details.png)
+![Details Page](Images/details.png)
 
 This included a details page that featured widgets providing more in depth data.
 ```python
@@ -152,7 +152,7 @@ def company_details(request, ticker):
 
 ## Data Scraping with Beautiful Soup
 
-![](calendar.png)
+![Calendar Page](Images/calendar.png)
 
 I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings. I wanted to allow the User to not only view the data for any given day, but also each day on any given week, and be able to navigate from one week to the next. This required me to understand how Yahoo Finance handles requests, and then write a function to define the necessary parameters for a request. Then I was able to pass those parameters to a different function that made the page request and scrape the desired data from the page.
 
@@ -265,7 +265,7 @@ def scrape_earnings(params):
 ```
 ## Restful API interface
 
-![](news.png)
+![News Page](Images/news.png)
 
 I used the Yahoo finance API from rapidapi.com to request news articles relating to S&P 500 companies. Below is the function I wrote to extract a list of articles from the json response:
 ```python
@@ -310,7 +310,7 @@ def news(request):
     return render(request, 'EarningsApp/earningsapp_news.html', context)
 ```
 
-![](home.png)
+![Home Page](Images/home.png)
 
 And I also used it in combination with the data scraping function on the homepage:
 ```python
