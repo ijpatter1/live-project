@@ -69,7 +69,7 @@ class CompanyForm(ModelForm):
         }
 ```
 
-INSERT SCREENSHOT HERE
+![](tracker.png)
 
 I wrote the views and templates necessary to handle requests and display the data from the database. Users can add, edit and remove companies from the database. Multiple companies can be removed at once from the Index page. 
 
@@ -132,7 +132,7 @@ def edit_company(request, ticker):
     return render(request, 'EarningsApp/earningsapp_edit.html', context)
 ```
 
-INSERT SCREENSHOT HERE
+![](details.png)
 
 This included a details page that featured widgets providing more in depth data.
 ```python
@@ -152,7 +152,7 @@ def company_details(request, ticker):
 
 ## Data Scraping with Beautiful Soup
 
-INSERT SCREENSHOT HERE
+![](calendar.png)
 
 I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings. I wanted to allow the User to not only view the data for any given day, but also each day on any given week, and be able to navigate from one week to the next. This required me to understand how Yahoo Finance handles requests, and then write a function to define the necessary parameters for a request. Then I was able to pass those parameters to a different function that made the page request and scrape the desired data from the page.
 
@@ -265,7 +265,7 @@ def scrape_earnings(params):
 ```
 ## Restful API interface
 
-INSERT SCREENSHOT HERE
+![](news.png)
 
 I used the Yahoo finance API from rapidapi.com to request news articles relating to S&P 500 companies. Below is the function I wrote to extract a list of articles from the json response:
 ```python
@@ -294,7 +294,6 @@ def get_news(category):
     context = {'articles': articles}
     return context
 ```
-INSERT SCREENSHOT HERE
 I created a view for a dedicated news page that also allows the User to search for headlines by stock symbol:
 ```python
 def news(request):
@@ -311,7 +310,7 @@ def news(request):
     return render(request, 'EarningsApp/earningsapp_news.html', context)
 ```
 
-INSERT SCREENSHOT HERE
+![](home.png)
 
 And I also used it in combination with the data scraping function on the homepage:
 ```python
