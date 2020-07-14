@@ -328,6 +328,16 @@ def home(request):
 
 ## Other Skills Used
 
+Working with a team
+
+Daily stand-ups
+
+Retrospective and sprint review
+
+Working in PyCharm and Microsoft Azure DevOps
+
+Checking in and pushing code daily
+
 ## Future plans
 
 I created this web app to automate a process that I personally go through. I intend on turning this project into a fully functioning web app that will aggregate free stock market data to enable trading strategies that profit from the share price movements caused by the earnings season.
