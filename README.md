@@ -325,7 +325,7 @@ def home(request):
     return render(request, "EarningsApp/earningsapp_home.html", context)
 ```
 
-## Other Skills Learned
+## Other Skills Used
 
 ## Future plans
 
