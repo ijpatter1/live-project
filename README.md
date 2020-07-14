@@ -24,6 +24,8 @@ Specifically, my web app focused on tracking S&P 500 quarterly earnings report d
 
 I created a django model and model form for saving company data to the database and developed basic "CRUD" functionality. 
 
+![](form.png)
+
 ```python
 class Company(models.Model):
     ticker = UpperCharField(max_length=10, unique=True)
