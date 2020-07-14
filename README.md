@@ -6,6 +6,7 @@ INSERT GIF HERE
 * [Database Collection Manager](#database-collection-manager)
 * [Data Scraping with Beautiful Soup](#data-scraping-with-beautiful-soup)
 * [Restful API interface](#restful-api-interface)
+* [Other Skills Used ](#other-skills-used)
 * [Future Plans](#future-plans)
 
 ## Introduction
@@ -323,6 +324,8 @@ def home(request):
     context.update(top_five)
     return render(request, "EarningsApp/earningsapp_home.html", context)
 ```
+
+## Other Skills Learned
 
 ## Future plans
 
