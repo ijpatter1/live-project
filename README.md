@@ -71,7 +71,7 @@ class CompanyForm(ModelForm):
 
 ![Tracker Page](Images/tracker.png)
 
-I wrote the views and templates necessary to handle requests and display the data from the database. Users can add, edit and remove companies from the database. Multiple companies can be removed at once from the Index page. 
+I wrote the views and templates necessary to handle requests and display the data from the database. Users can add, edit and remove companies from the database. Multiple companies can be removed at once from the Index page.
 
 ```python
 def index(request):
@@ -131,6 +131,84 @@ def edit_company(request, ticker):
     context = {'form': form, 'ticker': ticker, 'company': company}
     return render(request, 'EarningsApp/earningsapp_edit.html', context)
 ```
+
+I used the Django Template language to present the data on page templates. For example, below is the template for the tracker page:
+
+```html
+{% extends 'EarningsApp/earningsapp_base.html' %}
+{% load staticfiles %}
+
+{% block appcontent %}
+<div class="page-container">
+    {% if companies %} <!-- if there are items in the database, insert them into a table -->
+    <div class="table-container index-container">
+        <table id="index-table" class="primary-table">
+            <tr>
+                <th><input type="checkbox" onClick="select_all(this)"></th>
+                <th>Report Date</th>
+                <th>Ticker</th>
+                <th>Company</th>
+                <th>Investor Relations</th>
+                <th>Call Time</th>
+                <th>Estimated EPS</th>
+                <th>Last Updated</th>
+                <th></th>
+                <th></th>
+            </tr>
+                {% for company in companies %}  <!-- django loops through database items -->
+                <tr>  <!-- and creates a table row for each item -->
+                    <!-- creates a checkbox for each item with the ticker as the value to be passed with the POST request -->
+                    <td><input name="checks" type="checkbox" value="{{ company.ticker }}" onclick="box_checked(this)" form="delete"></td>
+                    <td>{{ company.report_date }}</td>
+                    <td>{{ company.ticker }}</td>
+                    <td>{{ company.company }}</td>
+                    <td>{% if company.investor_url %}
+                        <a href="{{ company.investor_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                        {% else %}
+                        {{ company.investor_url }}
+                        {% endif %}
+                    </td>
+                    <td>{{ company.earnings_call }}</td>
+                    <td>{{ company.estimated_eps }}</td>
+                    <td>{{ company.last_updated }}</td>
+                    <td><a href="{% url 'details' company.ticker %}">Details</a></td>
+                    <td><a href="{% url 'edit' company.ticker %}">Edit</a></td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    <div id="btn-container">
+        {% if companies %}
+        <!-- submit button for the checkbox delete function -->
+        <input disabled id="checkbox-btn" name="delete" onclick="open_modal()" type="button" value="Delete">
+        {% else %}
+        <p>You haven't added any companies yet. Click the button to get started!</p>
+        {% endif %}
+        <input name="add" type="button" value="Add Company" onclick="window.location.href='{% url 'add_company' %}';">
+    </div>
+    <!-- Delete confirmation modal -->
+    <div class="modal-container">
+        <div class="delete-modal">
+            <div class="modal-content hide">
+                <h1>Delete Item(s)</h1>
+                <p>Are you sure you want to delete the selected item(s)?</p>
+                <form id="delete" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-buttons">
+                        <input name="submit" type="submit" value="Delete">
+                        <input type="button" value="Cancel" onclick="close_modal()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
+</div>
+
+{% endblock %}
+```
+
 
 ![Details Page](Images/details.png)
 
