@@ -154,7 +154,7 @@ def company_details(request, ticker):
 
 ![Calendar Page](Images/calendar.png)
 
-I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings. I wanted to allow the User to not only view the data for any given day, but also each day on any given week, and be able to navigate from one week to the next. This required me to understand how Yahoo Finance handles requests, and then write a function to define the necessary parameters for a request. Then I was able to pass those parameters to a different function that made the page request and scrape the desired data from the page.
+I used Beautiful Soup to scrap data from Yahoo Finance: https://finance.yahoo.com/calendar/earnings. Users can save the scraped data to the database. I wanted to allow the User to not only view the data for any given day, but also each day on any given week, and be able to navigate from one week to the next. This required me to understand how Yahoo Finance handles requests, and then write a function to define the necessary parameters for a request. Then I was able to pass those parameters to a different function that made the page request and scrape the desired data from the page.
 
 Below is the view function for the Calendar page:
 
@@ -328,7 +328,9 @@ def home(request):
 
 ## Other Skills Used
 
-Working with a team
+HTML/CSS and JavaScript to write templates and add improvements to the UI/UX. This included styling, hover effects, pop-ups, animations.
+
+Team work and internal communication
 
 Daily stand-ups
 
